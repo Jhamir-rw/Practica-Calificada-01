@@ -1,5 +1,5 @@
 # Practica-Calificada-01
-## Trabajp Grupal
+## Trabajo Grupal
 ### Integrantes
 -Aranda Gomez Zarella
 
