@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Controles y Selector RGB</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <main class="wrap">
+
+    <!-- ===================== 1) PANEL DE CONTROLES (con íconos) ===================== -->
+    <section class="panel">
+      <header class="panel__top">
+        <div class="panel__drag"></div>
+        <nav class="panel__icons" aria-label="Acciones">
+          <!-- usa tus SVG locales -->
+          <button class="iconbtn iconbtn--white" aria-label="Brillo">
+            <img src="icons/phosphor-sun.svg" alt="Sol">
+          </button>
+          <button class="iconbtn iconbtn--white" aria-label="Ajustes">
+            <img src="icons/phosphor-gear.svg" alt="Ajustes">
+          </button>
+          <button class="iconbtn iconbtn--white" aria-label="Copiar">
+            <img src="icons/phosphor-copy.svg" alt="Copiar">
+          </button>
+          <button class="iconbtn iconbtn--white" aria-label="Cerrar">
+            <img src="icons/phosphor-x.svg" alt="Cerrar">
+          </button>
+        </nav>
+      </header>
+
+      <div class="panel__body">
+        <div class="prow">
+          <div class="prow__label">
+            <small>Volumen de medios</small>
+            <div class="prow__iconleft" aria-hidden="true">
+              <img src="icons/phosphor-sun.svg" alt="">
+            </div>
+          </div>
+          <input type="range" min="0" max="100" value="30">
+          <div class="prow__iconright" aria-hidden="true">
+            <span class="dot"></span>
+          </div>
+        </div>
+
+        <div class="prow">
+          <div class="prow__label">
+            <small>Volumen de alarma</small>
+            <div class="prow__iconleft" aria-hidden="true">
+              <span class="dot"></span>
+            </div>
+          </div>
+          <input type="range" min="0" max="100" value="55">
+          <div class="prow__iconright" aria-hidden="true">
+            <img src="icons/phosphor-gear.svg" alt="">
+          </div>
+        </div>
+
+        <div class="prow">
+          <div class="prow__label">
+            <small>Callback de clic de ícono</small>
+            <div class="prow__iconleft" aria-hidden="true">
+              <img src="icons/phosphor-copy.svg" alt="">
+            </div>
+          </div>
+          <input type="range" min="0" max="100" value="20">
+          <div class="prow__iconright" aria-hidden="true">
+            <img src="icons/phosphor-x.svg" alt="">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 2) CARD DEL COLOR RGB (SIN íconos) ===================== -->
+    <section class="card">
+      <header class="card__top">
+        <h2 class="card__title">Selector RGB</h2>
+        <!-- (sin nav de íconos aquí) -->
+      </header>
+
+      <div id="preview" class="card__color" role="img" aria-label="Vista previa del color"></div>
+
+      <div class="card__controls">
+        <div class="row">
+          <label for="rRange">R</label>
+          <input id="rRange" type="range" min="0" max="255" value="80" />
+          <div class="numwrap"><input id="rNum" type="number" min="0" max="255" value="80"/></div>
+        </div>
+        <div class="row">
+          <label for="gRange">G</label>
+          <input id="gRange" type="range" min="0" max="255" value="165" />
+          <div class="numwrap"><input id="gNum" type="number" min="0" max="255" value="165"/></div>
+        </div>
+        <div class="row">
+          <label for="bRange">B</label>
+          <input id="bRange" type="range" min="0" max="255" value="92" />
+          <div class="numwrap"><input id="bNum" type="number" min="0" max="255" value="92"/></div>
+        </div>
+      </div>
+
+      <footer class="card__footer">
+        <span id="rgbText">rgb(80, 165, 92)</span>
+        <span id="hexText">#50A55C</span>
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    // ----- Lógica RGB -----
+    const preview = document.getElementById('preview');
+    const rRange=document.getElementById('rRange'),gRange=document.getElementById('gRange'),bRange=document.getElementById('bRange');
+    const rNum=document.getElementById('rNum'),gNum=document.getElementById('gNum'),bNum=document.getElementById('bNum');
+    const rgbText=document.getElementById('rgbText'),hexText=document.getElementById('hexText');
+    const clamp=v=>Math.max(0,Math.min(255,parseInt(v||0,10)));
+    function update(){
+      const r=clamp(rRange.value),g=clamp(gRange.value),b=clamp(bRange.value);
+      rNum.value=r; gNum.value=g; bNum.value=b;
+      preview.style.background=`rgb(${r},${g},${b})`;
+      rgbText.textContent=`rgb(${r}, ${g}, ${b})`;
+      hexText.textContent=('#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('')).toUpperCase();
+    }
+    [rRange,gRange,bRange].forEach(el=>el.addEventListener('input',update));
+    [rNum,gNum,bNum].forEach((el,i)=>el.addEventListener('input',()=>{[rRange,gRange,bRange][i].value=clamp(el.value);update();}));
+    update();
+  </script>
+</body>
+</html>
